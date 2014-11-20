@@ -6,7 +6,6 @@ var fs = require('fs');
 
 exports.handleRequest = function (req, res) {
   var requiredPath = req.url;
-  console.log('the request url is: ' + req.url);
   if (requiredPath === '/'){
     requiredPath = '/public/index.html';
   } else if(requiredPath.indexOf('/public') < 0) {

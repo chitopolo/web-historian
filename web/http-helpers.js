@@ -16,30 +16,30 @@ exports.serveAssets = function(res, filePath, contentType){
   // Write some code here that helps serve up your static files!
   // (Static files are things like html (yours or archived from others...), css, or anything that doesn't change often.)
 
-  fs.exists(filePath, function(exists) {
-      if (exists) {
+  // fs.exists(filePath, function(exists) {
+  //     if (exists) {
           fs.readFile(filePath, function(error, content) {
               if (error) {
+                console.log("there was an error rendering");
                   res.writeHead(500);
                   res.end();
               }
               else {
-                console.log(contentType);
-                console.log(filePath);
+                console.log("there was an NO error rendering");
+
                   res.writeHead(200, { 'Content-Type': contentType });
                   res.write(content);
                   res.end();
               }
           });
-      }
-  });
+  //     }
+  // });
 }
 
 
 var sites = [];
 
 var extend = function(obj) {
-   // if (!_.isObject(obj)) return obj;
     var source, prop;
     for (var i = 1, length = arguments.length; i < length; i++) {
       source = arguments[i];
@@ -61,9 +61,20 @@ var actions = {
       archive.addUrlToList(site);
       var path = site.split("=");
       var urlName = path[path.length - 1];
+
+
       if(archive.isUrlInList(urlName)) {
-        //need to check if urlName is in file somehow!!!!!!!!!!!!!!!!!!!!!
-        sendResponse(response, urlName, 302, true);
+        if(archive.isURLArchived(archive.paths.archivedSites + '/' + urlName)) {
+          console.log('yes '+urlName );
+          exports.serveAssets(response, (archive.paths.archivedSites + '/' + urlName), {'Content-Type': 'text/html'});
+        // sendResponse(response, urlName, 302, true);
+        } else {
+          // console.log('not archived');
+          console.log('no ' +urlName + ' file exists? '+archive.isURLArchived('/'+ urlName));
+          //
+          archive.downloadUrls(urlName);
+          sendResponse(response, urlName, 302, true);
+        }
       } else {
         sendResponse(response, urlName, 302, false);
       }

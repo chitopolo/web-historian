@@ -1,8 +1,9 @@
 var fs = require('fs');
 var path = require('path');
-var _ = require('underscore');
 var archive = require('../helpers/archive-helpers');
 var os = require('os');
+var url = require('url');
+var http = require('http');
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
  * Consider using the `paths` object below to store frequently used file paths. This way,
@@ -34,7 +35,6 @@ exports.readListOfUrls = function(){
 exports.isUrlInList = function(url){
   fs.readFile(archive.paths.list, function (err, data) {
     if (err) throw err;
-    console.log("the data is: "+ data);
     if(JSON.parse(JSON.stringify(data)).indexOf(url) < 0){
      return false;
     }
@@ -59,18 +59,24 @@ exports.addUrlToList = function(site){
 
 exports.isURLArchived = function(filePath){
   //look if the site is archived
-  // fs.exists(filePath, function(exist) {
-  //   return exist;
-  // });
+  // console.log(filePath);
+ fs.readFile(filePath, function (err, data) {
+    if (err) return false;
+  });
+  return true;
 };
 
-exports.downloadUrls = function(newWebSite){
-  //download the content
-  // fs.writeFile(archive.paths.list, newWebSite, {flag:'a'}, function(err) {
-  //   if(err) {
-  //       console.log(err);
-  //   } else {
-  //       console.log("The file was saved!");
-  //   }
-  // });
+exports.downloadUrls = function(urlName){
+    var file = fs.createWriteStream(archive.paths.archivedSites + '/' + urlName);
+    http.get('http://'+ urlName, function(res) {
+        res.on('data', function(data) {
+                file.write(data);
+            }).on('end', function() {
+                file.end();
+            });
+    });
 };
+
+
+// exports.downloadUrls();
+
