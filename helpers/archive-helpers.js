@@ -1,7 +1,8 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
-
+var archive = require('../helpers/archive-helpers');
+var os = require('os');
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
  * Consider using the `paths` object below to store frequently used file paths. This way,
@@ -30,20 +31,41 @@ exports.readListOfUrls = function(){
   //read file
 };
 
-exports.isUrlInList = function(){
+exports.isUrlInList = function(sites, urlName){
   //it has the url or not
   //return true or false
+  return sites.indexOf(urlName) < 0;
 };
 
-exports.addUrlToList = function(){
+exports.addUrlToList = function(site){
   //open the file
   //add url to the list
+  var path = site.split("=");
+  var urlName = path[path.length - 1];
+
+  fs.writeFile(archive.paths.list, urlName + os.EOL, {flag:'a'}, function(err) {
+    if(err) {
+        console.log(err);
+    } else {
+        console.log("The file was saved!");
+    }
+  });
 };
 
-exports.isURLArchived = function(){
+exports.isURLArchived = function(filePath){
   //look if the site is archived
+  fs.exists(filePath, function(exist) {
+    return exist;
+  });
 };
 
-exports.downloadUrls = function(){
+exports.downloadUrls = function(newWebSite){
   //download the content
+  // fs.writeFile(archive.paths.list, newWebSite, {flag:'a'}, function(err) {
+  //   if(err) {
+  //       console.log(err);
+  //   } else {
+  //       console.log("The file was saved!");
+  //   }
+  // });
 };
