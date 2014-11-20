@@ -1,6 +1,7 @@
 var path = require('path');
 var fs = require('fs');
 var archive = require('../helpers/archive-helpers');
+var queryString = require('queryString');
 
 exports.headers = headers = {
   "access-control-allow-origin": "*",
@@ -32,11 +33,50 @@ exports.serveAssets = function(res, filePath, contentType){
 }
 
 
+// var sites = [];
 
-  // fs.readFile('public/index.html', function (err, html) {
-  //   if (err) throw err;
-  //    res.writeHeader(200, {"Content-Type": "text/html"});
-  //    res.write(html);
-  //    res.end();
 
-  // });
+var actions = {
+  'GET': function(request, response){
+    // sendResponse(response, {results: messages});
+  },
+  'POST': function(request, response){
+    collectData(request, function(site) {
+      sendResponse(response, site, 201);
+
+    });
+  },
+
+  'OPTIONS': function(request, response){
+    sendResponse(response);
+
+  }
+}
+
+
+  exports.doAction = function(request, response) {
+
+  var action = actions[request.method]
+  if(action){
+    action(request, response);
+  }else{
+    sendResponse(response, "not Found", 404)
+  };
+}
+
+var sendResponse = function(response, data, statusCode){
+    statusCode = statusCode || 200;
+    response.writeHead(statusCode, headers);
+    response.end();
+  }
+
+var collectData = function(request, callback){
+   var data = "";
+   request.on('data', function(chunk){
+    data+= chunk;
+  });
+
+   request.on('end', function(){
+    callback(JSON.parse(JSON.stringify(data)));
+  });
+};
