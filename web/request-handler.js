@@ -5,12 +5,11 @@ var fs = require('fs');
 // require more modules/folders here!
 
 exports.handleRequest = function (req, res) {
-
   var requiredPath = req.url;
   console.log('the request url is: ' + req.url);
   if (requiredPath === '/'){
     requiredPath = '/public/index.html';
-  } else {
+  } else if(requiredPath.indexOf('/public') < 0) {
     requiredPath = '/public' + requiredPath;
   }
   var filePath = __dirname+requiredPath;
@@ -26,7 +25,6 @@ exports.handleRequest = function (req, res) {
           contentType = 'text/javascript';
           break;
       case 'css':
-          // filePath += '/public/style.css';
           contentType = 'text/css';
           break;
   }

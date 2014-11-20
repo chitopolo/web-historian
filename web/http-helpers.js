@@ -24,6 +24,8 @@ exports.serveAssets = function(res, filePath, contentType){
                   res.end();
               }
               else {
+                console.log(contentType);
+                console.log(filePath);
                   res.writeHead(200, { 'Content-Type': contentType });
                   res.write(content);
                   res.end();
@@ -57,7 +59,6 @@ var actions = {
   'POST': function(request, response){
     collectData(request, function(site) {
       archive.addUrlToList(site);
-      console.log("my name is:", site);
       var path = site.split("=");
       var urlName = path[path.length - 1];
       if(archive.isUrlInList(urlName)) {
@@ -88,8 +89,7 @@ exports.doAction = function(request, response) {
 var sendResponse = function(response, data, statusCode, toArchive){
     statusCode = statusCode || 200;
     if(toArchive) {
-      console.log("I M HERE!!!!!!!!");
-      response.writeHead(statusCode, extend(headers, {'Location': '../public/loading.html'}));
+      response.writeHead(statusCode, extend(headers, {'Location': '/loading.html'}));
     }
     else {
       response.writeHead(statusCode, extend(headers, {'Location': '/'}));

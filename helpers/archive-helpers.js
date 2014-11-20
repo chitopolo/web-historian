@@ -31,10 +31,15 @@ exports.readListOfUrls = function(){
   //read file
 };
 
-exports.isUrlInList = function(filePath){
-  fs.exists(filePath, function(exist) {
-      return exist;
-    });
+exports.isUrlInList = function(url){
+  fs.readFile(archive.paths.list, function (err, data) {
+    if (err) throw err;
+    console.log("the data is: "+ data);
+    if(JSON.parse(JSON.stringify(data)).indexOf(url) < 0){
+     return false;
+    }
+  });
+  return true;
 };
 
 exports.addUrlToList = function(site){
