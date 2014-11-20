@@ -5,8 +5,6 @@ var fs = require('fs');
 // require more modules/folders here!
 
 exports.handleRequest = function (req, res) {
-  //res.end(archive.paths.list);
-  //
 
   var requiredPath = req.url;
   console.log('the request url is: ' + req.url);
@@ -18,8 +16,6 @@ exports.handleRequest = function (req, res) {
   var filePath = __dirname+requiredPath;
   var extname = filePath.split('.').pop();
 
-  // console.log('this is the extArray: '+ extArray);
-  // var extname = extArray[extArray.length-1];
   var contentType;
 
   switch (extname) {
@@ -36,9 +32,5 @@ exports.handleRequest = function (req, res) {
   }
 
   httpHelper.serveAssets(res,filePath, contentType);
-
-
   httpHelper.doAction(req, res);
-
-
 };

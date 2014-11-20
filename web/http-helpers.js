@@ -2,6 +2,7 @@ var path = require('path');
 var fs = require('fs');
 var archive = require('../helpers/archive-helpers');
 var queryString = require('queryString');
+// var _ = require('underscore');
 
 exports.headers = headers = {
   "access-control-allow-origin": "*",
@@ -33,8 +34,21 @@ exports.serveAssets = function(res, filePath, contentType){
 }
 
 
-// var sites = [];
+var sites = [];
 
+var extend = function(obj) {
+   // if (!_.isObject(obj)) return obj;
+    var source, prop;
+    for (var i = 1, length = arguments.length; i < length; i++) {
+      source = arguments[i];
+      for (prop in source) {
+        if (hasOwnProperty.call(source, prop)) {
+            obj[prop] = source[prop];
+        }
+      }
+    }
+    return obj;
+  };
 
 var actions = {
   'GET': function(request, response){
@@ -42,8 +56,8 @@ var actions = {
   },
   'POST': function(request, response){
     collectData(request, function(site) {
-      sendResponse(response, site, 201);
-
+      sendResponse(response, site, 302);
+      archive.addUrlToList(site);
     });
   },
 
@@ -53,8 +67,7 @@ var actions = {
   }
 }
 
-
-  exports.doAction = function(request, response) {
+exports.doAction = function(request, response) {
 
   var action = actions[request.method]
   if(action){
@@ -66,7 +79,7 @@ var actions = {
 
 var sendResponse = function(response, data, statusCode){
     statusCode = statusCode || 200;
-    response.writeHead(statusCode, headers);
+    response.writeHead(statusCode, extend(headers, {'Location': '/'}));
     response.end();
   }
 
