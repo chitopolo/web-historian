@@ -56,8 +56,16 @@ var actions = {
   },
   'POST': function(request, response){
     collectData(request, function(site) {
-      sendResponse(response, site, 302);
       archive.addUrlToList(site);
+      console.log("my name is:", site);
+      var path = site.split("=");
+      var urlName = path[path.length - 1];
+      if(archive.isUrlInList(urlName)) {
+        //need to check if urlName is in file somehow!!!!!!!!!!!!!!!!!!!!!
+        sendResponse(response, urlName, 302, true);
+      } else {
+        sendResponse(response, urlName, 302, false);
+      }
     });
   },
 
@@ -77,9 +85,15 @@ exports.doAction = function(request, response) {
   };
 }
 
-var sendResponse = function(response, data, statusCode){
+var sendResponse = function(response, data, statusCode, toArchive){
     statusCode = statusCode || 200;
-    response.writeHead(statusCode, extend(headers, {'Location': '/'}));
+    if(toArchive) {
+      console.log("I M HERE!!!!!!!!");
+      response.writeHead(statusCode, extend(headers, {'Location': '../public/loading.html'}));
+    }
+    else {
+      response.writeHead(statusCode, extend(headers, {'Location': '/'}));
+    }
     response.end();
   }
 

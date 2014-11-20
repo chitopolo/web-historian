@@ -31,10 +31,10 @@ exports.readListOfUrls = function(){
   //read file
 };
 
-exports.isUrlInList = function(sites, urlName){
-  //it has the url or not
-  //return true or false
-  return sites.indexOf(urlName) < 0;
+exports.isUrlInList = function(filePath){
+  fs.exists(filePath, function(exist) {
+      return exist;
+    });
 };
 
 exports.addUrlToList = function(site){
@@ -54,9 +54,9 @@ exports.addUrlToList = function(site){
 
 exports.isURLArchived = function(filePath){
   //look if the site is archived
-  fs.exists(filePath, function(exist) {
-    return exist;
-  });
+  // fs.exists(filePath, function(exist) {
+  //   return exist;
+  // });
 };
 
 exports.downloadUrls = function(newWebSite){
