@@ -24,8 +24,6 @@ exports.initialize = function(pathsObj){
   });
 };
 
-// The following function names are provided to you to suggest how you might
-// modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(){
   //open the file
@@ -61,8 +59,10 @@ exports.isURLArchived = function(filePath){
   //look if the site is archived
   // console.log(filePath);
  fs.readFile(filePath, function (err, data) {
+  console.log('cannot read');
     if (err) return false;
   });
+ console.log('can read');
   return true;
 };
 
